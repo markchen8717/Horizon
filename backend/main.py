@@ -30,6 +30,10 @@ users = {}
 groups = {}
 
 
+@app.route('/',methods=['GET'])
+def index():
+    return "hello world"
+
 '''Create'''
 
 # Create a new session and return session uuid
@@ -38,10 +42,10 @@ groups = {}
 @app.route('/sessions', methods=['POST'])
 def addSession():
     try:
-        sessionUUID = uuid.uuid1()
+        sessionUUID = str(uuid.uuid1())
         sessionQuestions = None  # Generate a list of questions
-        sessions[sessionUUID] = Session(sessionUUID, questions)
-        return jsonify({uuid: sessionUUID})
+        sessions[sessionUUID] = Session(sessionUUID, sessionQuestions)
+        return jsonify({"uuid": sessionUUID})
     except:
         return make_response(None, 500)
 
@@ -53,11 +57,11 @@ def addUser(sessionID):
     try:
         if sessionID not in sessions:
             return make_response('session {id} does not exists'.format(id=sessionID), 404)
-        userUUID = uuid.uuid1()
+        userUUID = str(uuid.uuid1())
         newUser = User(userUUID)
         sessions[sessionID].addUser(newUser)
         users[userUUID] = newUser
-        return jsonify({uuid: userUUID})
+        return jsonify({"uuid": userUUID})
     except:
         return make_response(None, 500)
 
