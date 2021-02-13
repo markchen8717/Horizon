@@ -1,0 +1,61 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.question {
+  margin: -40px 0 40px 0;
+  font-size: 56px;
+}
+
+.imageContainer {
+  display: flex;
+  width: 900px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.countdown {
+  margin-top: -50px;
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  background-color: #f0c380;
+  color: white;
+  font-size: 30px;
+  font-weight: bolder;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image {
+  width: 360px;
+  height: 360px;
+  border-radius: 20px;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.button {
+  margin-top: 20px;
+  padding: 10px 0px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-size: 28px;
+  color: white;
+  font-weight: bolder;
+  transition: filter 0.3s ease;
+}
+
+.button:hover {
+  filter: brightness(80%);
+}
