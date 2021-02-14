@@ -19,4 +19,4 @@ Made by:
 - Sam Prokopchuck
 - Mark Chen
 - Connor Ibbotson
-- For Calgary hacks 2021
+For Calgary hacks 2021
