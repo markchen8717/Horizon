@@ -7,5 +7,4 @@ class Session:
     def addUser(self, user):
         if user.uuid not in self.users:
             self.users[user.uuid] = user
-
     

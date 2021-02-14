@@ -5,6 +5,7 @@ from flask_cors import CORS
 from Session import Session
 from User import User
 from Group import Group
+from data import getQuestions
 
 app = Flask(__name__)
 CORS(app)
@@ -25,14 +26,21 @@ Group
     - user list
 '''
 
-sessions = {}
-users = {}
-groups = {}
+sessionCount = 0
+sessions = {"1":Session("1",None)}
 
+#Dummy data
+users = {"2":User("2","Sam"), "4":User("4","Mark")}
+groups = {"3":Group("3")}
+sessions["1"].addUser(users["2"])
+sessions["1"].addUser(users["4"])
+groups["3"].addUser(users["4"])
+groups["3"].addUser(users["2"])
 
-@app.route('/',methods=['GET'])
+@app.route('/', methods=['GET'])
 def index():
     return "hello world"
+
 
 '''Create'''
 
@@ -42,8 +50,10 @@ def index():
 @app.route('/sessions', methods=['POST'])
 def addSession():
     try:
-        sessionUUID = str(uuid.uuid1())
-        sessionQuestions = None  # Generate a list of questions
+        #sessionUUID = str(uuid.uuid1())
+        sessionUUID = sessionCount + 1
+        sessionCount += 1
+        sessionQuestions = getQuestions()
         sessions[sessionUUID] = Session(sessionUUID, sessionQuestions)
         return jsonify({"uuid": sessionUUID})
     except:
@@ -57,8 +67,9 @@ def addUser(sessionID):
     try:
         if sessionID not in sessions:
             return make_response('session {id} does not exists'.format(id=sessionID), 404)
+        data = request.json
         userUUID = str(uuid.uuid1())
-        newUser = User(userUUID)
+        newUser = User(userUUID,data["username"])
         sessions[sessionID].addUser(newUser)
         users[userUUID] = newUser
         return jsonify({"uuid": userUUID})
@@ -88,7 +99,8 @@ def getGroup(groupID):
     try:
         if groupID not in groups:
             return make_response('group {id} does not exists'.format(id=groupID), 404)
-        return jsonify(groups[groupID].__dict__)
+        print(groups[groupID].__dict__)
+        return jsonify(groups[groupID].getSerializable())
     except:
         return make_response(None, 500)
 
@@ -108,6 +120,7 @@ def getUser(userID):
 '''Update'''
 
 # Update a user
+
 
 @app.route('/users/<userID>', methods=['PATCH'])
 def updateUser(userID):
