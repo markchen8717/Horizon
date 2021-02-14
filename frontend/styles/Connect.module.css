@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  color: #1f1f1f;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url(https://www.pixel4k.com/wp-content/uploads/2018/11/sea-horizon-sunset-clouds-sky-4k_1541116681.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-bottom: 200px;
+}
+
+.title {
+  font-size: 75px;
+}
+
+.group {
+  font-size: 45px;
+}

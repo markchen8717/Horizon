@@ -2,9 +2,10 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useState } from "react";
 import Choice from "../components/choice";
+import Fade from "react-reveal/Fade";
+import Bounce from "react-reveal/Bounce";
 
 export default function Home() {
-  const [inRoom, setInRoom] = useState(true);
   const questions = [
     {
       type: "subject",
@@ -57,54 +58,82 @@ export default function Home() {
   ];
   const [index, setIndex] = useState(0);
   const [responses, setResponses] = useState([]);
+  const [inSession, setInSession] = useState(false);
+  const [modal, setModal] = useState(false);
 
   const nextQuestion = (response) => {
     setResponses([...responses, response]);
     if (index < questions.length - 1) {
       setIndex(index + 1);
     } else {
-      console.log("RESPONSES:\n");
-      var i;
-      for (i = 0; i < responses.length; i++) {
-        console.log(responses[i]);
-      }
       // call machine learning stuff and end screen
     }
   };
 
-  if (inRoom) {
+  const handleClick = () => {
+    setInSession(true);
+  };
+
+  const showModal = () => {
+    setModal(true);
+  };
+
+  if (inSession) {
     return <Choice question={questions[index]} nextQuestion={nextQuestion} />;
   } else {
     return (
-      <div className={styles.container}>
-        <Head>
-          <title>buffalo</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+      <Fade>
+        <div className={styles.container}>
+          <Head>
+            <title>Horizon</title>
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
 
-        <main className={styles.main}>
-          <div className={styles.horizon}>Horizon</div>
-          <div className={styles.search_box}>
-            <input
-              className={styles.search_bar}
-              type="text"
-              placeholder="Enter Code"
-            />
-          </div>
-          <div className={styles.search_box}>
-            <input
-              className={styles.search_bar}
-              type="text"
-              placeholder="Name"
-            />
-          </div>
-        </main>
+          <main className={styles.main}>
+            {modal && (
+              <>
+                <div
+                  className={styles.overlay}
+                  onClick={() => setModal(false)}
+                />
+                <Bounce>
+                  <div className={styles.modal}>
+                    <h3>Your session ID is:</h3>
+                    <h1 className={styles.sessionId}>28A09D4</h1>
+                  </div>
+                </Bounce>
+              </>
+            )}
+            <div className={styles.horizon}>Horizon</div>
+            <div className={styles.search_box}>
+              <input
+                className={styles.search_bar}
+                type="text"
+                placeholder="Enter Session Code"
+              />
+            </div>
+            <div className={styles.search_box}>
+              <input
+                className={styles.search_bar}
+                type="text"
+                placeholder="Username"
+              />
+            </div>
+            <button className={styles.button} onClick={handleClick}>
+              Enter!
+            </button>
+            <p className={styles.or}>OR</p>
+            <button className={styles.createSession} onClick={showModal}>
+              Create a Session!
+            </button>
+          </main>
 
-        <footer className={styles.footer}>
-          Built for CalgaryHacks by Justin Chu, Sam Prokopchuk, Mark Chen, and
-          Connor Ibbotson
-        </footer>
-      </div>
+          <footer className={styles.footer}>
+            Built for CalgaryHacks21 by Justin Chu, Sam Prokopchuk, Mark Chen,
+            and Connor Ibbotson
+          </footer>
+        </div>
+      </Fade>
     );
   }
 }
