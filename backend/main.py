@@ -1,14 +1,12 @@
 import json
-import uuid
+# import uuid
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
 from Session import Session
 from User import User
 from Group import Group
-# from data import getQuestions
+from data import getQuestions
 
-def getQuestions():
-    return None
 
 app = Flask(__name__)
 CORS(app)
@@ -28,19 +26,6 @@ Group
     - uuid
     - user list
 '''
-
-sessionCount = 0
-sessions = {"1": Session("1", None)}
-
-# Dummy data
-users = {"2": User("2", "Sam"), "4": User("4", "Mark")}
-groups = {"3": Group("3")}
-sessions["1"].addUser(users["2"])
-sessions["1"].addUser(users["4"])
-groups["3"].addUser(users["4"])
-groups["3"].addUser(users["2"])
-print(sessions["1"].getSerializable())
-
 
 @app.route('/', methods=['GET'])
 def index():
