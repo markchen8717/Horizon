@@ -1,32 +1,50 @@
 import styles from "../styles/Choice.module.css";
 import { useState, useEffect, useRef } from "react";
-import Fade from "react-reveal/Fade";
+import { Fade, Slide } from "react-reveal";
 
 export default function Choice(props) {
   const [seconds, setSeconds] = useState(15);
+  const [users, setUsers] = useState([]);
+  const [users1, setUsers1] = useState([]);
+  const [choice, setChoice] = useState(0);
   const foo = useRef();
 
   useEffect(() => {
     function tick() {
       setSeconds((prevSeconds) => prevSeconds - 1);
+      if (Math.random() > 0.4) {
+        if (Math.random() > 0.8) {
+          setUsers((users) => [...users, seconds, seconds]);
+        }
+        setUsers((users) => [...users, seconds]);
+      }
+      if (Math.random() > 0.5) {
+        if (Math.random() > 0.8) {
+          setUsers1((users) => [...users, seconds, seconds]);
+        }
+        setUsers1((users) => [...users, seconds]);
+      }
     }
     foo.current = setInterval(() => tick(), 1000);
   }, []);
 
   useEffect(() => {
     if (seconds === 0) {
-      handleClick(0);
+      setSeconds(15);
+      setChoice(0);
+      setUsers([]);
+      setUsers1([]);
+      if (choice == 0) {
+        props.nextQuestion(-1);
+      } else {
+        props.nextQuestion(choice);
+      }
     }
   }, [seconds]);
 
-  const handleClick = (response) => {
-    setSeconds(15);
-    props.nextQuestion(response);
-  };
-
   const User = () => (
     <svg
-      style={{ height: 20, width: 20 }}
+      style={{ height: 30, width: 30 }}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="white"
@@ -44,8 +62,8 @@ export default function Choice(props) {
       <div className={styles.container}>
         <div className={styles.container}>
           <h1 className={styles.question}>{props.question.question}</h1>
-          <p className={styles.username}>Username</p>
-          <p className={styles.session}>SessionID</p>
+          <p className={styles.username}>Username: {props.username}</p>
+          <p className={styles.session}>Session: {props.session}</p>
           <div className={styles.imageContainer}>
             <div
               className={styles.side}
@@ -57,7 +75,15 @@ export default function Choice(props) {
                     }
               }
             >
-              <button className={styles.button} onClick={() => handleClick(-1)}>
+              <button
+                className={styles.button}
+                onClick={() => setChoice(-1)}
+                style={
+                  choice == -1
+                    ? { backgroundColor: "#17B890", transform: "scale(1.1)" }
+                    : {}
+                }
+              >
                 {props.question.type == "image" ? (
                   <svg
                     style={{ height: 50, width: 50, marginBottom: -8 }}
@@ -75,9 +101,29 @@ export default function Choice(props) {
                   props.question.a1
                 )}
               </button>
-              {/* <div>
-              <User />
-            </div> */}
+              <div
+                className={styles.users}
+                style={
+                  users.length > 16
+                    ? { marginTop: 40, marginBottom: -158 }
+                    : users.length > 8
+                    ? {
+                        marginTop: 40,
+                        marginBottom: -116,
+                      }
+                    : users.length == 0
+                    ? {}
+                    : { marginTop: 40, marginBottom: -74 }
+                }
+              >
+                {users.map((user, index) => {
+                  return (
+                    <Slide key={index} bottom>
+                      <User />
+                    </Slide>
+                  );
+                })}
+              </div>
             </div>
             <div className={styles.countdown}>{seconds}</div>
             <div
@@ -90,7 +136,15 @@ export default function Choice(props) {
               }
               className={styles.side}
             >
-              <button className={styles.button} onClick={() => handleClick(1)}>
+              <button
+                className={styles.button}
+                onClick={() => setChoice(1)}
+                style={
+                  choice == 1
+                    ? { backgroundColor: "#17B890", transform: "scale(1.1)" }
+                    : {}
+                }
+              >
                 {props.question.type == "image" ? (
                   <svg
                     style={{ height: 50, width: 50, marginBottom: -8 }}
@@ -108,6 +162,29 @@ export default function Choice(props) {
                   props.question.a2
                 )}
               </button>
+              <div
+                className={styles.users}
+                style={
+                  users1.length > 16
+                    ? { marginTop: 40, marginBottom: -158 }
+                    : users1.length > 8
+                    ? {
+                        marginTop: 40,
+                        marginBottom: -116,
+                      }
+                    : users1.length == 0
+                    ? {}
+                    : { marginTop: 40, marginBottom: -74 }
+                }
+              >
+                {users1.map((user, index) => {
+                  return (
+                    <Slide key={index} bottom>
+                      <User />
+                    </Slide>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
