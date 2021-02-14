@@ -15,8 +15,8 @@ This was our first 'multi-user' project, which was interesting. It added a new l
 Probably an improved visual aspect to the website, as well as more thorough and deliberate questions and answers. Currently most of the questions are all quite standard.
 
 Made by:
-Justin Chu
-Sam Prokopchuck
-Mark Chen
-Connor Ibbotson
-For Calgary hacks 2021
+- Justin Chu
+- Sam Prokopchuck
+- Mark Chen
+- Connor Ibbotson
+- For Calgary hacks 2021
