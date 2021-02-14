@@ -6,7 +6,10 @@ export default function Connect(props) {
   return (
     <div className={styles.container}>
       {props.loading ? (
+        <>
+        <h1 style={{color: "white", textShadow: "rgba(0, 0, 0, 0.5) 0px 2px 4px"}}>Waiting for host to end session</h1>
         <Loading background="rgb(255, 255, 255)" duration="0.5s" />
+        </>
       ) : (
         <>
           <div className={styles.overlay} />
@@ -21,7 +24,6 @@ export default function Connect(props) {
               <button
                 className={styles.button}
                 style={{ marginTop: 35 }}
-                // onClick={endSession}
               >
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <span>Connect!</span>

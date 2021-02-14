@@ -50,6 +50,8 @@ def index():
 sessions={}
 users={}
 groups={}
+
+
 @app.route('/sessions', methods=['POST'])
 def addSession():
     try:

@@ -4,7 +4,7 @@ import { Fade, Slide } from "react-reveal";
 import ReactAudioPlayer from "react-audio-player";
 
 export default function Choice(props) {
-  const [seconds, setSeconds] = useState(1);
+  const [seconds, setSeconds] = useState(10);
   const [users, setUsers] = useState([]);
   const [users1, setUsers1] = useState([]);
   const [choice, setChoice] = useState(0);
@@ -31,9 +31,11 @@ export default function Choice(props) {
 
   useEffect(() => {
     if (seconds === 0) {
-      setChoice(-1);
+      if(choice === 0) {
+        setChoice(-1);
+      }
       setTimeout(() => {
-        setSeconds(1);
+        setSeconds(10);
         setChoice(0);
         setUsers([]);
         setUsers1([]);

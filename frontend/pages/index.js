@@ -80,7 +80,7 @@ export default function Home() {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          responses: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+          responses: [...responses, -1],
         }),
       };
 
