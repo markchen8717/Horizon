@@ -59,8 +59,10 @@ export default function Home() {
   const [index, setIndex] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [responses, setResponses] = useState([]);
+  const [group, setGroup] = useState([]);
   const [screen, setScreen] = useState(0); // 0: start screen, 1: choices screen, 2: results screen
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const [uuid, setUuid] = useState(0);
   const [session, setSession] = useState(0);
@@ -74,42 +76,73 @@ export default function Home() {
       const requestOptions = {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ responses: responses }),
+        body: JSON.stringify({
+          responses: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+        }),
       };
+      console.log(responses);
+
       fetch(
         // Send user response to server
-        `https://calgary-hack-2021.uc.r.appspot.com/users/${uuid}`,
+        `https://calgary-hack-2021.uc.r.appspot.com/users/${uuid.uuid}`,
         requestOptions
       ).then(() => {
-        // MAKE CALL TO GET GROUP
+        const callback = function callback() {
+          // While the user has not been matched with a group yet
+          fetch(`https://calgary-hack-2021.uc.r.appspot.com/users/${uuid.uuid}`)
+            .then((response) => response.json())
+            .then((data) => {
+              if (data["group"] !== null) {
+                console.log(data["group"]);
+                fetch(
+                  `https://calgary-hack-2021.uc.r.appspot.com/groups/${data["group"]}.uuid}`
+                ) // Get group info
+                  .then((response) => response.json())
+                  .then((data) => {
+                    setGroup(data["users"]);
+                    setLoading(false);
+                  });
+              } else {
+                setTimer(callback, 5000);
+              }
+            });
+        };
       });
       setScreen(2);
     }
   };
 
   const handleClick = async () => {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: username }),
-    };
-    // fetch( // Join session
-    //   `https://calgary-hack-2021.uc.r.appspot.com/sessions/${session}/users`,
-    //   requestOptions
-    // )
-    //   .then((response) => response.json())
-    //   .then((data) =>
-    fetch(
-      // Get session questions
-      `https://calgary-hack-2021.uc.r.appspot.com/sessions/10/questions`
-      // `https://calgary-hack-2021.uc.r.appspot.com/sessions/${session}/questions`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        setQuestions(data);
-      });
-    // );
-    setScreen(1);
+    if (username === "" || session === "") {
+      alert("Please make sure username and session are entered.");
+    } else {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: username }),
+      };
+      fetch(
+        // Join session
+        `https://calgary-hack-2021.uc.r.appspot.com/sessions/${session}/users`,
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setUuid(data);
+          fetch(
+            // Get session questions
+            `https://calgary-hack-2021.uc.r.appspot.com/sessions/${session}/questions`
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              setQuestions(data);
+              setScreen(1);
+            });
+        })
+        .catch(() => {
+          alert("Invalid session code!");
+        });
+    }
   };
 
   const showModal = async () => {
@@ -139,7 +172,7 @@ export default function Home() {
 
   // Show the correct screen
   if (screen == 2) {
-    return <Connect />;
+    return <Connect loading={loading} group={group} />;
   } else if (screen == 1) {
     return (
       <Choice

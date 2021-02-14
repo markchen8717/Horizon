@@ -10,6 +10,9 @@
   "dependencies": {
     "next": "10.0.6",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-audio-player": "^0.14.0",
+    "react-dom": "17.0.1",
+    "react-loading-dot": "^1.0.6",
+    "react-reveal": "^1.2.2"
   }
 }

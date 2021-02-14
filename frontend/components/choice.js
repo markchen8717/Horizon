@@ -1,9 +1,10 @@
 import styles from "../styles/Choice.module.css";
 import { useState, useEffect, useRef } from "react";
 import { Fade, Slide } from "react-reveal";
+import ReactAudioPlayer from "react-audio-player";
 
 export default function Choice(props) {
-  const [seconds, setSeconds] = useState(15);
+  const [seconds, setSeconds] = useState(1);
   const [users, setUsers] = useState([]);
   const [users1, setUsers1] = useState([]);
   const [choice, setChoice] = useState(0);
@@ -30,15 +31,18 @@ export default function Choice(props) {
 
   useEffect(() => {
     if (seconds === 0) {
-      setSeconds(15);
-      setChoice(0);
-      setUsers([]);
-      setUsers1([]);
-      if (choice == 0) {
-        props.nextQuestion(-1);
-      } else {
-        props.nextQuestion(choice);
-      }
+      setChoice(-1);
+      setTimeout(() => {
+        setSeconds(1);
+        setChoice(0);
+        setUsers([]);
+        setUsers1([]);
+        if (choice == 0) {
+          props.nextQuestion(-1);
+        } else {
+          props.nextQuestion(choice);
+        }
+      }, 1000);
     }
   }, [seconds]);
 
@@ -71,7 +75,7 @@ export default function Choice(props) {
                 props.question.type == "binary"
                   ? { backgroundColor: "#17B890" }
                   : {
-                      background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url(${props.question.a1url}) 50% 50% / cover no-repeat`,
+                      background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url(${props.question.Img1}) 50% 50% / cover no-repeat`,
                     }
               }
             >
@@ -131,7 +135,7 @@ export default function Choice(props) {
                 props.question.type == "binary"
                   ? { backgroundColor: "#D62246" }
                   : {
-                      background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url(${props.question.a2url}) 50% 50% / cover no-repeat`,
+                      background: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url(${props.question.Img2}) 50% 50% / cover no-repeat`,
                     }
               }
               className={styles.side}
