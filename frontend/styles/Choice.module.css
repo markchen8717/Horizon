@@ -7,9 +7,11 @@
 }
 
 .question {
+  text-align: center;
   position: absolute;
-  top: 15vh;
-  font-size: 70px;
+  font-size: 26px;
+  padding: 0 10px;
+  top: 5vh;
   text-shadow: rgba(0, 0, 0, 0.7) 0px 5px 5px;
   color: white;
 }
@@ -34,6 +36,7 @@
 
 .imageContainer {
   display: flex;
+  flex-direction: column;
 }
 
 .countdown {
@@ -59,8 +62,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 50vw;
+  height: 50vh;
+  width: 100vw;
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -69,35 +72,46 @@
   display: inline-block;
   border-radius: 60px;
   background-color: transparent;
-  padding: 12px 40px;
+  padding: 8px 20px;
   cursor: pointer;
   border: 3px solid white;
   outline: none;
-  font-size: 50px;
+  font-size: 20px;
   color: white;
   font-weight: bold;
   transition: 0.5s;
-}
-
-@keyframes glowing {
-  0% {
-    background-color: #b20000;
-    -webkit-box-shadow: 0 0 3px #b20000;
-  }
-  50% {
-    background-color: #ff0000;
-    -webkit-box-shadow: 0 0 40px #ff0000;
-  }
-  100% {
-    background-color: #b20000;
-    -webkit-box-shadow: 0 0 3px #b20000;
-  }
 }
 
 .button:hover {
   transform: scale(1.1);
 }
 
-.button:focus {
-  /* animation: glowing 100ms 500ms; */
+@media screen and (min-width: 1300px) {
+  .question {
+    top: 15vh;
+    font-size: 70px;
+  }
+
+  .imageContainer {
+    flex-direction: row;
+  }
+
+  .side {
+    height: 100vh;
+    width: 50vw;
+  }
+
+  .button {
+    display: inline-block;
+    border-radius: 60px;
+    background-color: transparent;
+    padding: 12px 40px;
+    cursor: pointer;
+    border: 3px solid white;
+    outline: none;
+    font-size: 50px;
+    color: white;
+    font-weight: bold;
+    transition: 0.5s;
+  }
 }
