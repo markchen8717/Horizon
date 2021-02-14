@@ -6,8 +6,7 @@ class Session:
         self.uuid = uuid
         self.users = {}
         self.questions = questions
-        self.STATUS = {"ACTIVE": 1, "STOPPED": 2}
-        self.status = self.STATUS["ACTIVE"]
+        self.status = "ACTIVE"
 
     def addUser(self, user):
         if user.uuid not in self.users:
@@ -20,6 +19,6 @@ class Session:
         return{
             "uuid": self.uuid,
             "users": [user.username for userUUID, user in self.users.items()],
-            "questions": questions,
-            "status": {v: k for k, v in self.STATUS.items()}[self.status],
+            "questions": self.questions,
+            "status": self.status
         }

@@ -5,7 +5,10 @@ from flask_cors import CORS
 from Session import Session
 from User import User
 from Group import Group
-from data import getQuestions
+# from data import getQuestions
+
+def getQuestions():
+    return None
 
 app = Flask(__name__)
 CORS(app)
@@ -139,15 +142,18 @@ def updateUser(userID):
 
 # Update the status of a session
 
-
-@app.route('/session/<sessionID>', methods=['PATCH'])
+@app.route('/sessions/<sessionID>', methods=['PATCH'])
 def updateSession(sessionID):
     try:
         if sessionID not in sessions:
             return make_response('session {id} does not exists'.format(id=sessionID), 404)
         data = request.json
+        #only allow setting status to stopped
         if "status" in data:
-            sessions[sessionID].setStatus(data["status"])
+            if data["status"] != "STOPPED":
+                return make_response('invalid status argument',404)
+            sessions[sessionID].setStatus("STOPPED")
+        #Arrange groups for users
         return jsonify(sessions[sessionID].getSerializable())
     except:
         return make_response(None,500)
