@@ -1,6 +1,4 @@
 import json
-import os
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 # import uuid
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS
