@@ -5,7 +5,7 @@ import { Loading } from "react-loading-dot";
 export default function Connect(props) {
   return (
     <div className={styles.container}>
-      {!props.loading ? (
+      {props.loading ? (
         <Loading background="rgb(255, 255, 255)" duration="0.5s" />
       ) : (
         <>
@@ -16,9 +16,7 @@ export default function Connect(props) {
                 Congratulations! Your group is:
               </h3>
               {props.group.map((user, index) => {
-                // if (user !== "Connor") {
-                return <h1 className={styles.group}>{user}</h1>;
-                // }
+                return <h1 key={index} className={styles.group}>{user}<span style={{fontSize: 16}}>{user == props.username && "(you)"}</span></h1>;
               })}
               <button
                 className={styles.button}

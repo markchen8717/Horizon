@@ -88,7 +88,7 @@ export default function Choice(props) {
                     : {}
                 }
               >
-                {props.question.type == "image" ? (
+                {props.question.type == "img" ? (
                   <svg
                     style={{ height: 50, width: 50, marginBottom: -8 }}
                     xmlns="http://www.w3.org/2000/svg"
@@ -149,7 +149,7 @@ export default function Choice(props) {
                     : {}
                 }
               >
-                {props.question.type == "image" ? (
+                {props.question.type == "img" ? (
                   <svg
                     style={{ height: 50, width: 50, marginBottom: -8 }}
                     xmlns="http://www.w3.org/2000/svg"

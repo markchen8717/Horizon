@@ -14,6 +14,7 @@ import uuid
 app = Flask(__name__)
 CORS(app)
 
+
 '''
 Session
     - uuid
@@ -38,20 +39,31 @@ def index():
 '''Create'''
 
 # Create a new session and return session uuid
+# class Counter:
+#     def __init__(self,start):
+#         self.count = start
+#     def increment(self):
+#         self.count +=1
 
-sessionCount = 0
+# sessionCount = Counter(0)
+
 sessions={}
 users={}
 groups={}
 @app.route('/sessions', methods=['POST'])
 def addSession():
     try:
-        global sessionCount
-        # sessionUUID = str(uuid.uuid1())
-        sessionUUID = str(sessionCount + 1)
-        sessionCount += 1
+        global sessions
+        global users
+        global groups
+        sessionUUID = str(uuid.uuid1())
+        # sessionUUID = str(sessionCount)
+        # sessionCount.increment()
+        # sessionCount += 1
         sessionQuestions = getQuestions()
         sessions[sessionUUID] = Session(sessionUUID, sessionQuestions)
+        print("Created session {id}".format(id=sessionUUID))
+        print("All sessions",sessions)
         return jsonify({"uuid": sessionUUID})
     except:
         return make_response(None, 500)
@@ -62,6 +74,9 @@ def addSession():
 @app.route('/sessions/<sessionID>/users', methods=['POST'])
 def addUser(sessionID):
     try:
+        global sessions
+        global users
+        global groups
         if sessionID not in sessions:
             return make_response('session {id} does not exists'.format(id=sessionID), 404)
         data = request.json
@@ -69,8 +84,10 @@ def addUser(sessionID):
             return make_response('missing username param',404)
         userUUID = str(uuid.uuid1())
         newUser = User(userUUID, data["username"])
+        print("Created user {id}".format(id=userUUID))
         sessions[sessionID].addUser(newUser)
         users[userUUID] = newUser
+        print("All users",users)
         return jsonify({"uuid": userUUID})
     except:
         return make_response(None, 500)
@@ -84,6 +101,9 @@ def addUser(sessionID):
 @app.route('/sessions/<sessionID>/questions', methods=['GET'])
 def getSessionQuestions(sessionID):
     try:
+        global sessions
+        global users
+        global groups
         if sessionID not in sessions:
             return make_response('session {id} does not exists'.format(id=sessionID), 404)
         return jsonify(sessions[sessionID].questions)
@@ -96,6 +116,9 @@ def getSessionQuestions(sessionID):
 @app.route('/groups/<groupID>', methods=['GET'])
 def getGroup(groupID):
     try:
+        global sessions
+        global users
+        global groups
         if groupID not in groups:
             return make_response('group {id} does not exists'.format(id=groupID), 404)
         return jsonify(groups[groupID].getSerializable())
@@ -108,6 +131,10 @@ def getGroup(groupID):
 @app.route('/users/<userID>', methods=['GET'])
 def getUser(userID):
     try:
+        global sessions
+        global users
+        global groups
+        print("All users",users)
         if userID not in users:
             return make_response('user {id} does not exists'.format(id=userID), 404)
         return jsonify(users[userID].__dict__)
@@ -123,6 +150,9 @@ def getUser(userID):
 @app.route('/users/<userID>', methods=['PATCH'])
 def updateUser(userID):
     try:
+        global sessions
+        global users
+        global groups
         if userID not in users:
             return make_response('user {id} does not exists'.format(id=userID), 404)
         data = request.json
@@ -137,6 +167,10 @@ def updateUser(userID):
 @app.route('/sessions/<sessionID>', methods=['PATCH'])
 def updateSession(sessionID):
     try:
+        global sessions
+        global users
+        global groups
+        print("All sessions",sessions)
         if sessionID not in sessions:
             return make_response('session {id} does not exists'.format(id=sessionID), 404)
         data = request.json
@@ -145,11 +179,13 @@ def updateSession(sessionID):
             if data["status"] != "STOPPED":
                 return make_response('invalid status argument',404)
             sessions[sessionID].setStatus("STOPPED")
-            getGroups([*sessions[sessionID].users.values()],sessions[sessionID].questions)
+            groupList = getGroups([*sessions[sessionID].users.values()],sessions[sessionID].questions)
+            for group in groupList:
+                groups[group.uuid] = group
         #Arrange groups for users
         return jsonify(sessions[sessionID].getSerializable())
     except:
         return make_response(None,500)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(threaded=False, processes=1, debug=True)

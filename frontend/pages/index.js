@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Choice from "../components/choice";
 import Connect from "../components/connect";
 import { Fade, Bounce } from "react-reveal";
+// import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 export default function Home() {
   // const questions = [
@@ -63,6 +64,7 @@ export default function Home() {
   const [screen, setScreen] = useState(0); // 0: start screen, 1: choices screen, 2: results screen
   const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  // const [copied, setCopied] = useState(false);
   const [username, setUsername] = useState("");
   const [uuid, setUuid] = useState(0);
   const [session, setSession] = useState(0);
@@ -73,6 +75,7 @@ export default function Home() {
       // If there are still more questions to be displayed
       setIndex(index + 1);
     } else {
+      setScreen(2)
       const requestOptions = {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -80,22 +83,22 @@ export default function Home() {
           responses: [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
         }),
       };
-      console.log(responses);
 
       fetch(
         // Send user response to server
-        `https://calgary-hack-2021.uc.r.appspot.com/users/${uuid.uuid}`,
+                `https://calgary-hack-2021.uc.r.appspot.com/users/${uuid.uuid}`,
         requestOptions
       ).then(() => {
-        const callback = function callback() {
+        (function callback() {
           // While the user has not been matched with a group yet
-          fetch(`https://calgary-hack-2021.uc.r.appspot.com/users/${uuid.uuid}`)
+          fetch(
+            `https://calgary-hack-2021.uc.r.appspot.com/users/${uuid.uuid}`,
+            )
             .then((response) => response.json())
             .then((data) => {
               if (data["group"] !== null) {
-                console.log(data["group"]);
                 fetch(
-                  `https://calgary-hack-2021.uc.r.appspot.com/groups/${data["group"]}.uuid}`
+                  `https://calgary-hack-2021.uc.r.appspot.com/groups/${data["group"]}`
                 ) // Get group info
                   .then((response) => response.json())
                   .then((data) => {
@@ -103,12 +106,11 @@ export default function Home() {
                     setLoading(false);
                   });
               } else {
-                setTimer(callback, 5000);
+                setTimeout(callback, 5000);
               }
             });
-        };
-      });
-      setScreen(2);
+        }());
+      })
     }
   };
 
@@ -172,7 +174,7 @@ export default function Home() {
 
   // Show the correct screen
   if (screen == 2) {
-    return <Connect loading={loading} group={group} />;
+    return <Connect username={username} loading={loading} group={group} />;
   } else if (screen == 1) {
     return (
       <Choice
@@ -198,6 +200,10 @@ export default function Home() {
                 <Bounce>
                   <div className={styles.modal}>
                     <h3>Your session ID is:</h3>
+                    {/* <CopyToClipboard text={session}
+          onCopy={() => setCopied(true)}>
+          <span>Copy</span>
+        </CopyToClipboard> */}
                     <h1 className={styles.sessionId}>{session}</h1>
                     <button
                       className={styles.createSession}
