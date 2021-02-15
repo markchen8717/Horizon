@@ -20,4 +20,4 @@ Made by:
 - Mark Chen
 - Connor Ibbotson
 
-## For Calgary hacks 2021
+## For Calgary Hacks 2021
